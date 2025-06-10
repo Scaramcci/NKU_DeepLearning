@@ -1,0 +1,13 @@
+# Package Information for pkg-config
+
+prefix=/Users/scarramcci/Desktop/Course_NKU/深度学习/lab1_CNN/.conda
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: SQLite
+Description: SQL database engine
+Version: 3.45.3
+Libs: -L${libdir} -lsqlite3
+Libs.private: -lz 
+Cflags: -I${includedir}

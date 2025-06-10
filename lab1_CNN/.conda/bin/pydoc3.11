@@ -1,0 +1,5 @@
+#!/Users/scarramcci/Desktop/Course_NKU/深度学习/lab1_CNN/.conda/bin/python3.11
+
+import pydoc
+if __name__ == '__main__':
+    pydoc.cli()

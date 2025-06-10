@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}
+
+\bibitem{golub2014scientific}
+Gene~H Golub and James~M Ortega.
+\newblock {\em Scientific computing: an introduction with parallel computing}.
+\newblock Elsevier, 2014.
+
+\bibitem{joseph2022parallel}
+Stephen~Bassi Joseph, Emmanuel~Gbenga Dada, Sanjay Misra, and Samuel Ajoka.
+\newblock Parallel faces recognition attendance system with anti-spoofing using convolutional neural network.
+\newblock In {\em Illumination of Artificial Intelligence in Cybersecurity and Forensics}, pages 123--137. Springer, 2022.
+
+\bibitem{quinn1994parallel}
+Michael~J Quinn.
+\newblock {\em Parallel computing theory and practice}.
+\newblock McGraw-Hill, Inc., 1994.
+
+\end{thebibliography}
