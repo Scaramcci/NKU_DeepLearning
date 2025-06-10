@@ -168,7 +168,7 @@ def main(model='cnn', epochs=2, batch_size=4, save_path='model.pth'):
     )
     
     # 绘制训练曲线
-    plot_path = f'image_report/training_curves_{model}.png'
+    plot_path = f'image/training_curves_{model}.png'
     plot_training_curves(train_losses, train_accs, val_losses, val_accs, plot_path)
     print(f'Training curves saved to {plot_path}')
 
@@ -176,4 +176,4 @@ def main(model='cnn', epochs=2, batch_size=4, save_path='model.pth'):
 if __name__ == '__main__':
     # 如果需要从命令行运行，可以在这里添加参数解析
     # 例如: main(model='resnet', epochs=5, batch_size=8, save_path='resnet_model.pth')
-    main(model='densenet', epochs=10, batch_size=16, save_path='densenet_model.pth')
+    main(model='cnn', epochs=5, batch_size=16, save_path='densenet_model.pth')
