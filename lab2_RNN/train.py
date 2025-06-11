@@ -10,6 +10,11 @@ import matplotlib.ticker as ticker
 from utils.data_loader import load_data, randomTrainingExample, lineToTensor
 from models.rnn import RNN
 from models.lstm import LSTM
+from models.gru import GRU
+
+# 设置设备
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
 
 # 创建保存图表的目录
 if not os.path.exists('results'):
@@ -28,15 +33,25 @@ def categoryFromOutput(output, all_categories):
     return all_categories[category_i], category_i
 
 def train_model(model, category_tensor, line_tensor, criterion, learning_rate=0.005):
+    # 确保数据在正确的设备上
+    category_tensor = category_tensor.to(device)
+    line_tensor = line_tensor.to(device)
     if isinstance(model, LSTM):
-        hidden = model.initHidden()  # 返回(h, c)
+        hidden = tuple(h.to(device) for h in model.initHidden())  # 返回(h, c)并移动到设备上
+        output = None
+        
+        for i in range(line_tensor.size(0)):
+            output, hidden = model(line_tensor[i], hidden)
+            
+    elif isinstance(model, GRU):  # GRU
+        hidden = model.initHidden().to(device)  # 只返回h并移动到设备上
         output = None
         
         for i in range(line_tensor.size(0)):
             output, hidden = model(line_tensor[i], hidden)
             
     else:  # RNN
-        hidden = model.initHidden()  # 只返回h
+        hidden = model.initHidden().to(device)  # 只返回h并移动到设备上
         
         for i in range(line_tensor.size(0)):
             output, hidden = model(line_tensor[i], hidden)
@@ -50,20 +65,25 @@ def train_model(model, category_tensor, line_tensor, criterion, learning_rate=0.
 
     return output, loss.item()
 
-def train(model_type='rnn', n_iters=100000, print_every=5000, plot_every=1000, learning_rate=0.005):
+def train(model_type='rnn', n_iters=300000, print_every=5000, plot_every=1000, learning_rate=0.001):
     # 加载数据
-    category_lines, all_categories, n_categories = load_data('data/names/*.txt')
+    category_lines, all_categories, n_categories = load_data('/root/autodl-tmp/NKU_DeepLearning/lab2_RNN/data/names/*.txt')
     
     # 创建模型
-    n_hidden = 128
+    n_hidden = 256
     n_letters = 57  # len(all_letters)
     
     if model_type.lower() == 'lstm':
         model = LSTM(n_letters, n_hidden, n_categories)
+    elif model_type.lower() == 'gru':
+        model = GRU(n_letters, n_hidden, n_categories)
     else:
         model = RNN(n_letters, n_hidden, n_categories)
+        
+    # 将模型移动到设备上
+    model = model.to(device)
     
-    criterion = nn.NLLLoss()
+    criterion = nn.NLLLoss().to(device)
     
     current_loss = 0
     all_losses = []
@@ -120,12 +140,19 @@ def train(model_type='rnn', n_iters=100000, print_every=5000, plot_every=1000, l
 
 def evaluate(model, line_tensor):
     with torch.no_grad():
+        # 确保数据在正确的设备上
+        line_tensor = line_tensor.to(device)
+        
         if isinstance(model, LSTM):
-            hidden = model.initHidden()
+            hidden = tuple(h.to(device) for h in model.initHidden())
             for i in range(line_tensor.size(0)):
                 output, hidden = model(line_tensor[i], hidden)
-        else:
-            hidden = model.initHidden()
+        elif isinstance(model, GRU):
+            hidden = model.initHidden().to(device)
+            for i in range(line_tensor.size(0)):
+                output, hidden = model(line_tensor[i], hidden)
+        else:  # RNN
+            hidden = model.initHidden().to(device)
             for i in range(line_tensor.size(0)):
                 output, hidden = model(line_tensor[i], hidden)
         return output
@@ -147,23 +174,34 @@ def calculate_confusion_matrix(model, category_lines, all_categories, n_categori
     
     return confusion
 
-def plot_confusion_matrix(confusion, all_categories, title, save_path):
-    fig = plt.figure(figsize=(10, 10))
-    ax = fig.add_subplot(111)
-    cax = ax.matshow(confusion.numpy())
-    fig.colorbar(cax)
+def plot_confusion_matrix(confusion, all_categories, title='Confusion Matrix', filename='results/confusion_matrix.png'):
+    # 设置图形大小
+    plt.figure(figsize=(10, 10))
+    
+    # 绘制混淆矩阵
+    plt.imshow(confusion, interpolation='nearest')
+    plt.title(title)
+    plt.colorbar()
     
     # 设置坐标轴
-    ax.set_xticklabels([''] + all_categories, rotation=90)
-    ax.set_yticklabels([''] + all_categories)
+    tick_marks = np.arange(len(all_categories))
+    plt.xticks(tick_marks, all_categories, rotation=90)
+    plt.yticks(tick_marks, all_categories)
     
-    # 强制在每个刻度处显示标签
-    ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
-    ax.yaxis.set_major_locator(ticker.MultipleLocator(1))
+    # 添加数值标签
+    thresh = confusion.max() / 2.
+    for i in range(confusion.shape[0]):
+        for j in range(confusion.shape[1]):
+            plt.text(j, i, format(confusion[i, j], '.2f'),
+                     ha="center", va="center",
+                     color="white" if confusion[i, j] > thresh else "black")
     
-    plt.title(title)
     plt.tight_layout()
-    plt.savefig(save_path)
+    plt.ylabel('True')
+    plt.xlabel('Predicted')
+    
+    # 保存图形
+    plt.savefig(filename)
     plt.close()
 
 def calculate_accuracy(model, category_lines, all_categories, n_samples=1000):
@@ -185,6 +223,15 @@ def calculate_accuracy(model, category_lines, all_categories, n_samples=1000):
     return correct / n_samples, accuracies
 
 if __name__ == '__main__':
+    # 打印设备信息
+    print(f"PyTorch version: {torch.__version__}")
+    print(f"CUDA available: {torch.cuda.is_available()}")
+    if torch.cuda.is_available():
+        print(f"CUDA device: {torch.cuda.get_device_name(0)}")
+    
+    # 加载数据
+    category_lines, all_categories, n_categories = load_data('/root/autodl-tmp/NKU_DeepLearning/lab2_RNN/data/names/*.txt')
+    
     # 训练RNN
     print("Training RNN...")
     rnn_model, rnn_losses, rnn_accuracies = train(model_type='rnn')
@@ -193,10 +240,15 @@ if __name__ == '__main__':
     print("\nTraining LSTM...")
     lstm_model, lstm_losses, lstm_accuracies = train(model_type='lstm')
     
+    # 训练GRU
+    print("\nTraining GRU...")
+    gru_model, gru_losses, gru_accuracies = train(model_type='gru')
+    
     # 保存损失对比曲线
     plt.figure(figsize=(10, 5))
-    plt.plot(rnn_losses, label='RNN')
-    plt.plot(lstm_losses, label='LSTM')
+    plt.plot(rnn_losses, label='GRU')
+    plt.plot(lstm_losses, label='RNN')
+    plt.plot(gru_losses, label='LSTM')
     plt.title('Training Loss Comparison')
     plt.xlabel('Iterations (x1000)')
     plt.ylabel('Loss')
@@ -206,8 +258,9 @@ if __name__ == '__main__':
     
     # 保存准确率对比曲线
     plt.figure(figsize=(10, 5))
-    plt.plot(rnn_accuracies, label='RNN')
-    plt.plot(lstm_accuracies, label='LSTM')
+    plt.plot(rnn_accuracies, label='GRU')
+    plt.plot(lstm_accuracies, label='RNN')
+    plt.plot(gru_accuracies, label='LSTM')
     plt.title('Training Accuracy Comparison')
     plt.xlabel('Iterations (x5000)')
     plt.ylabel('Accuracy')
@@ -215,18 +268,18 @@ if __name__ == '__main__':
     plt.savefig('results/accuracy_comparison.png')
     plt.close()
     
-    # 计算并绘制混淆矩阵
+    # 计算并绘制LSTM的混淆矩阵
     confusion = calculate_confusion_matrix(lstm_model, category_lines, all_categories, n_categories)
     plot_confusion_matrix(confusion, all_categories, 'Confusion Matrix (LSTM)', 'results/confusion_matrix_lstm.png')
     
-    # 计算准确率
+    # 计算并打印LSTM的准确率
     accuracy, accuracies = calculate_accuracy(lstm_model, category_lines, all_categories)
-    print(f'Accuracy: {accuracy * 100:.2f}%')
+    print(f"\nLSTM Accuracy: {accuracy * 100:.2f}%")
     
-    # 绘制准确率变化曲线
-    plt.figure(figsize=(10, 5))
-    plt.plot(accuracies)
-    plt.title('Accuracy Over Time (LSTM)')
-    plt.xlabel('Number of Samples')
-    plt.ylabel('Accuracy')
-    plt.show()
+    # 计算并绘制GRU的混淆矩阵
+    confusion = calculate_confusion_matrix(gru_model, category_lines, all_categories, n_categories)
+    plot_confusion_matrix(confusion, all_categories, 'Confusion Matrix (GRU)', 'results/confusion_matrix_gru.png')
+    
+    # 计算并打印GRU的准确率
+    accuracy, accuracies = calculate_accuracy(gru_model, category_lines, all_categories)
+    print(f"\nGRU Accuracy: {accuracy * 100:.2f}%")

@@ -40,11 +40,13 @@ def letterToIndex(letter):
     return all_letters.find(letter)
 
 def letterToTensor(letter):
+    # 不在这里指定设备，而是在使用时移动到设备上
     tensor = torch.zeros(1, n_letters)
     tensor[0][letterToIndex(letter)] = 1
     return tensor
 
 def lineToTensor(line):
+    # 不在这里指定设备，而是在使用时移动到设备上
     tensor = torch.zeros(len(line), 1, n_letters)
     for li, letter in enumerate(line):
         tensor[li][0][letterToIndex(letter)] = 1
@@ -56,6 +58,7 @@ def randomChoice(l):
 def randomTrainingExample(category_lines, all_categories):
     category = randomChoice(all_categories)
     line = randomChoice(category_lines[category])
+    # 不在这里指定设备，而是在使用时移动到设备上
     category_tensor = torch.tensor([all_categories.index(category)], dtype=torch.long)
     line_tensor = lineToTensor(line)
     return category, line, category_tensor, line_tensor

@@ -2,9 +2,11 @@ import torch
 import torch.nn as nn
 from .base_model import BaseModel
 
-class LSTM(BaseModel):
-    def __init__(self, input_size, hidden_size, output_size):
-        super(LSTM, self).__init__(input_size, hidden_size, output_size)
+class LSTM(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size, dropout_rate=0.2):
+        super(LSTM, self).__init__()
+        
+        self.hidden_size = hidden_size
         
         # 输入门组件
         self.input_gate = nn.Linear(input_size + hidden_size, hidden_size)
@@ -14,6 +16,9 @@ class LSTM(BaseModel):
         self.output_gate = nn.Linear(input_size + hidden_size, hidden_size)
         # 单元状态组件
         self.cell_gate = nn.Linear(input_size + hidden_size, hidden_size)
+        
+        # 添加dropout
+        self.dropout = nn.Dropout(dropout_rate)
         
         # 输出层
         self.output_layer = nn.Linear(hidden_size, output_size)

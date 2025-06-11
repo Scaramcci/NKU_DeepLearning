@@ -18,4 +18,6 @@ class RNN(BaseModel):
         return output, hidden
 
     def initHidden(self):
+        # 不在这里指定设备，而是在使用时移动到设备上
+        # 这样可以保持模型的灵活性
         return torch.zeros(1, self.hidden_size)
