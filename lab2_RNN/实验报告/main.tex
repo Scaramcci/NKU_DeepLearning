@@ -13,7 +13,7 @@ frame=single, rulesepcolor=\color{red!20!green!20!blue!20},
 escapeinside=``
 }
 
-\graphicspath{ {images/} }
+\graphicspath{ {../results/} }
 \usepackage{ctex}
 \usepackage{graphicx}
 \usepackage{color,framed}%文本框
@@ -91,7 +91,7 @@ rulesepcolor= \color{ red!20!green!20!blue!20}
 \pagestyle{fancy}
 \lhead{\kaishu \leftmark}
 % \chead{}
-\rhead{\kaishu 并行程序设计实验报告}%加粗\bfseries 
+\rhead{\kaishu 循环神经网络实验报告}%加粗\bfseries 
 \lfoot{}
 \cfoot{\thepage}
 \rfoot{}
@@ -117,8 +117,8 @@ rulesepcolor= \color{ red!20!green!20!blue!20}
     \includegraphics[width=0.8\textwidth]{NKU.png}\\[1cm]
     \vspace{20mm}
 		\textbf{\huge\textbf{\kaishu{计算机学院}}}\\[0.5cm]
-		\textbf{\huge{\kaishu{并行程序设计期末报告}}}\\[2.3cm]
-		\textbf{\Huge\textbf{\kaishu{并行加速的xxx算法}}}
+		\textbf{\huge{\kaishu{深度学习实验报告}}}\\[2.3cm]
+		\textbf{\Huge\textbf{\kaishu{循环神经网络实验}}}
 
 		\vspace{\fill}
     
@@ -126,12 +126,12 @@ rulesepcolor= \color{ red!20!green!20!blue!20}
     % \HRule \\[0.9cm]
     % \HRule \\[2.0cm]
     \centering
-    \textsc{\LARGE \kaishu{姓名\ :\ 王小红\ 陈小明}}\\[0.5cm]
-    \textsc{\LARGE \kaishu{学号\ :\ 20xxxxxxx}}\\[0.5cm]
+    \textsc{\LARGE \kaishu{姓名\ :\ 钟坤原}}\\[0.5cm]
+    \textsc{\LARGE \kaishu{学号\ :\ 2212468}}\\[0.5cm]
     \textsc{\LARGE \kaishu{专业\ :\ 计算机科学与技术}}\\[0.5cm]
     
     \vfill
-    {\Large \today}
+    {\Large }
     \end{center}
 \end{titlepage}
 
@@ -146,186 +146,429 @@ rulesepcolor= \color{ red!20!green!20!blue!20}
 \tableofcontents
 \newpage
 
-%--------------------------Title--------------------------------
-\section{第一层标题}
-\subsection{第二层标题}
-第二层标题比第一层标题小。asdgasgasdkljgasjd
-asdgasdgasdg
-
-asdgadga
-\subsubsection{第三层标题}
-第三层标题比第二层标题小。
-
-%-------------------------Codes----------------------------------
-\section{代码}
-\subsection{伪代码}
-伪代码
-\begin{breakablealgorithm} 
-  \caption{初始化obj文件信息——对应MeshSimplify类中readfile函数,Face类calMatrix函数} 
-  \begin{algorithmic}[1] %每行显示行号  
-      \Require obj文件,顶点、边、面列表
-      \Ensure 是否读取成功
-      \Function {calMatrix}{$Face$}  
-              \State $normal \gets e1×e2$  
-              \State $normal \gets normal/normal.length$
-              \State $temp[] \gets {normal.x, normal.y, normal.z, normal· Face.v1}$
-              \State $Matrix[i][j]=temp[i] * temp[j]$ 
-              \State \Return{$Matrix$}  
-      \EndFunction
-      \State 根据obj的v和f区分点面信息,读取并加入列表
-      \State $scale \gets $记录点坐标中距离原点最远的分量,以便后续OpenGL进行显示
-      \State $ori \gets $记录中心点,便于OpenGL显示在中心位置,避免有的obj偏移原点较多
-      \State 根据三角面片信息,计算一个面的三条边
-      \State 计算每个面的矩阵$\gets calMatrix$
-      \State 将每个面的矩阵加到各点,由点维护\\
-      \Return True
-  \end{algorithmic}  
-\end{breakablealgorithm}
-
-\subsection{代码}
-代码样式1
-\begin{minted}[mathescape,
-               linenos,
-               numbersep=5pt,
-               gobble=2,
-               frame=lines,
-               framesep=2mm,
-               highlightcolor=green!40]{c}
-
-    int main() {
-        cout << "Hello World!" << endl;
-        return 0;
-    }
-\end{minted}
-
-代码样式2
-\begin{lstlisting}[title=逐列访问平凡算法,frame=trbl,language={C++}]
-  void ord()   
-  {
-      double head,tail,freq,head1,tail1,timess=0; // timers
-      init(N);
-      QueryPerformanceFrequency((LARGE_INTEGER *)&freq );
-      QueryPerformanceCounter((LARGE_INTEGER *)&head);
-      for (int i=0; i<NN; i++)
-          for (int j=0; j<NN; j++)
-              col_sum[i] += (b[j][i]*a[j]);
-      QueryPerformanceCounter ((LARGE_INTEGER *)& tail) ;
-      cout << "\nordCol:" <<(tail-head)*1000.0 / freq<< "ms" << endl;
-  }
-\end{lstlisting}
-
-\section{图和表格}
-\subsection{图}
-如图\ref{fig:1}所示
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.3]{NKU.png}
-    \caption{Caption}
-    \label{fig:1}
-\end{figure}
-
-如图\ref{fig:diff}所示。
-如图\ref{fig:diff1}所示。
-\begin{figure}[htbp]
-\centering
-\subfigure[SSE的执行时间和准确率.]{
-\begin{minipage}[t]{0.33\linewidth}
-\centering
-\includegraphics[width=2in]{fig/sse算法运行时间与diff.png}
-\label{fig:diff1}
-\end{minipage}%
-}%
-\subfigure[AVX的执行时间和准确率.]{
-\begin{minipage}[t]{0.33\linewidth}
-\centering
-\includegraphics[width=2in]{fig/avx算法运行时间与diff.png}
-\end{minipage}%
-}%
-\subfigure[OpenMP的执行时间和准确率.]{
-\begin{minipage}[t]{0.33\linewidth}
-\centering
-\includegraphics[width=2in]{fig/omp_diff.png}
-\end{minipage}%
-}%
-\centering
-\caption{不同并行优化算法的执行时间与准确率对比}
-\label{fig:diff}
-\end{figure}
-
-
-表，如表\ref{table:t1}所示。
-\begin{table}[!htbp]
-  \centering
-  \begin{tabular}{ccccccccccc}
-  \toprule  
-  N/n$\backslash$Algo& naive-conv& naive-pool& omp-conv& omp-pool\\
-  \midrule
-  64/2& 0.0167& 0.01255& 0.04142& 0.03799\\
-  64/4& 0.03599&0.0394& 0.0458& 0.0421\\
-  \bottomrule
-  \end{tabular}
-  \caption{性能测试结果(4线程)(单位:ms)}
-  \label{table:t1}
-\end{table}
-
-带单元格表格，如表\ref{table:t2}所示。
-\begin{table}[!htbp]
-  \centering
-  \begin{tabular}{|c|c|c|c|c|c|c|}
-  \hline
-  \multicolumn{2}{|c|}{ \multirow{2}*{$Cost$} }& \multicolumn{5}{c|}{To}\\
-  \cline{3-7}
-  \multicolumn{2}{|c|}{}&$A$&$B$&$C$&$D$&$E$\\
-  \hline
-  \multirow{3}*{From}&$B$&7&0&1&3&8\\
-  \cline{2-7}
-  &$C$&8&1&0&2&7\\
-  \cline{2-7}
-  &$D$&8&3&2&0&5\\
-  \hline
-  \end{tabular}
-  \caption{结点C距离向量表(无毒性逆转)}
-  \label{table:t2}
-\end{table}
-
-推荐你们使用这个网站，将数据填进去，设置好格式之后就可以自动生成表格的latex代码。
-
-\href{https://www.tablesgenerator.com/}{TableGenerator}
-
-\section{其他会用到}
-\subsection{枚举}
-带标号枚举
-\begin{enumerate}
-  \item 1
-  \item 2
-\end{enumerate}
-
-不带标号枚举
+%--------------------------实验内容--------------------------------
+\section{实验概述}
+\subsection{实验目标}
+本实验旨在：
 \begin{itemize}
-  \item 1
-  \item 2
+    \item 掌握RNN（循环神经网络）的基本原理
+    \item 学会使用PyTorch搭建循环神经网络进行名字识别任务
+    \item 学会使用PyTorch搭建LSTM网络进行名字识别任务
+    \item 实现GRU网络并与RNN、LSTM进行性能对比
+    \item 分析不同循环神经网络架构的优缺点
 \end{itemize}
 
-\subsection{公式}
+\subsection{实验环境}
+\begin{itemize}
+    \item Python 3.11
+    \item PyTorch 
+    \item RTX3090
+\end{itemize}
 
-多行公式
+\subsection{数据集}
+本实验使用名字分类数据集，包含18个不同语言的人名数据：
+\begin{itemize}
+    \item 数据格式：每个文件包含一种语言的人名列表
+    \item 任务类型：多分类问题（18个类别）
+    \item 输入：人名字符串
+    \item 输出：语言类别
+\end{itemize}
+
+\section{理论基础}
+\subsection{RNN基本原理}
+RNN（Recurrent Neural Network）是一种专门处理序列数据的神经网络。其核心思想是在网络中引入循环连接，使得网络具有记忆能力。
+
+RNN的基本计算公式为：
 \begin{align}
-  a+b = a + b \\
-  \frac{a+b}{a-b}
+    h_t &= \tanh(W_{hh}h_{t-1} + W_{xh}x_t + b_h) \\
+    y_t &= W_{hy}h_t + b_y
 \end{align}
-\begin{equation}
-    a+b = a + b \\
-  \frac{a+b}{a-b}
-\end{equation}
 
-单行公式：$$\sum^N_{i=1}$$
-行内公式：$\sum^N_{i=1}$
+其中：
+\begin{itemize}
+    \item $h_t$：时刻$t$的隐藏状态
+    \item $x_t$：时刻$t$的输入
+    \item $y_t$：时刻$t$的输出
+    \item $W_{hh}, W_{xh}, W_{hy}$：权重矩阵
+    \item $b_h, b_y$：偏置向量
+\end{itemize}
 
-推荐你们使用\textit{Mathpix Snip}。是一个公式识别软件，可以自动生成公式对应的latex代码。
+\subsection{LSTM原理}
+LSTM（Long Short-Term Memory）是RNN的一种改进版本，通过引入门控机制解决了传统RNN的梯度消失问题。
 
-\subsection{链接}
-参考文献\cite{quinn1994parallel}\cite{golub2014scientific}\cite{joseph2022parallel}
-\textbf{超链接}  \href{http://youtube.com/}{YouTube}
+LSTM包含三个门：
+\begin{itemize}
+    \item \textbf{遗忘门}：决定从细胞状态中丢弃什么信息
+    \item \textbf{输入门}：决定什么新信息被存储在细胞状态中
+    \item \textbf{输出门}：决定输出什么值
+\end{itemize}
+
+LSTM的计算公式：
+\begin{align}
+    f_t &= \sigma(W_f \cdot [h_{t-1}, x_t] + b_f) \\
+    i_t &= \sigma(W_i \cdot [h_{t-1}, x_t] + b_i) \\
+    \tilde{C}_t &= \tanh(W_C \cdot [h_{t-1}, x_t] + b_C) \\
+    C_t &= f_t * C_{t-1} + i_t * \tilde{C}_t \\
+    o_t &= \sigma(W_o \cdot [h_{t-1}, x_t] + b_o) \\
+    h_t &= o_t * \tanh(C_t)
+\end{align}
+
+\subsection{GRU原理}
+GRU（Gated Recurrent Unit）是LSTM的简化版本，将遗忘门和输入门合并为更新门，减少了参数数量。
+
+GRU包含两个门：
+\begin{itemize}
+    \item \textbf{重置门}：决定如何将新输入与之前的记忆结合
+    \item \textbf{更新门}：决定保留多少之前的记忆
+\end{itemize}
+
+\section{网络结构实现}
+本实验实现了三种不同的循环神经网络结构：RNN、LSTM和GRU。各网络的详细代码实现请参见附录\ref{appendix:code}。
+
+\subsection{RNN网络结构}
+RNN网络采用最基础的循环神经网络结构，具有以下特点：
+\begin{itemize}
+    \item 输入层：57维（字符one-hot编码）
+    \item 隐藏层：256维
+    \item 输出层：18维（语言类别数）
+    \item 激活函数：tanh（隐藏层），LogSoftmax（输出层）
+\end{itemize}
+
+\subsection{LSTM网络结构}
+LSTM网络包含完整的门控机制，具有以下特点：
+\begin{itemize}
+    \item 包含完整的门控机制（输入门、遗忘门、输出门）
+    \item 维护细胞状态和隐藏状态
+    \item 添加Dropout防止过拟合
+    \item 能够处理长序列依赖关系
+\end{itemize}
+
+\subsection{GRU网络结构}
+GRU网络采用简化的门控设计，具有以下特点：
+\begin{itemize}
+    \item 简化的门控机制（重置门、更新门）
+    \item 参数数量少于LSTM
+    \item 训练速度较快
+    \item 性能通常接近LSTM
+\end{itemize}
+
+\section{实验结果与分析}
+\subsection{训练损失对比}
+如图\ref{fig:loss_comparison}所示，展示了三种网络的训练损失曲线对比。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{loss_comparison.png}
+    \caption{三种网络训练损失对比}
+    \label{fig:loss_comparison}
+\end{figure}
+
+从损失曲线可以观察到：
+\begin{itemize}
+    \item LSTM收敛最快，最终损失最低
+    \item GRU性能接近LSTM，但略逊一筹
+    \item RNN收敛较慢，容易陷入局部最优
+\end{itemize}
+
+\subsection{训练准确率对比}
+如图\ref{fig:accuracy_comparison}所示，展示了三种网络的训练准确率曲线对比。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{accuracy_comparison.png}
+    \caption{三种网络训练准确率对比}
+    \label{fig:accuracy_comparison}
+\end{figure}
+
+从准确率曲线可以看出：
+\begin{itemize}
+    \item LSTM达到最高准确率（约85\%）
+    \item GRU准确率略低于LSTM（约82\%）
+    \item RNN准确率最低（约75\%）
+\end{itemize}
+
+\subsection{各网络详细分析}
+\subsubsection{RNN性能分析}
+\begin{figure}[htbp]
+\centering
+\subfigure[RNN训练损失]{
+\begin{minipage}[t]{0.45\linewidth}
+\centering
+\includegraphics[width=\textwidth]{loss_rnn.png}
+\end{minipage}%
+}%
+\subfigure[RNN训练准确率]{
+\begin{minipage}[t]{0.45\linewidth}
+\centering
+\includegraphics[width=\textwidth]{accuracy_rnn.png}
+\end{minipage}%
+}%
+\caption{RNN训练过程}
+\label{fig:rnn_training}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{confusion_matrix_rnn.png}
+    \caption{RNN混淆矩阵}
+    \label{fig:rnn_confusion}
+\end{figure}
+
+\subsubsection{LSTM性能分析}
+\begin{figure}[htbp]
+\centering
+\subfigure[LSTM训练损失]{
+\begin{minipage}[t]{0.45\linewidth}
+\centering
+\includegraphics[width=\textwidth]{loss_lstm.png}
+\end{minipage}%
+}%
+\subfigure[LSTM训练准确率]{
+\begin{minipage}[t]{0.45\linewidth}
+\centering
+\includegraphics[width=\textwidth]{accuracy_lstm.png}
+\end{minipage}%
+}%
+\caption{LSTM训练过程}
+\label{fig:lstm_training}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{confusion_matrix_lstm.png}
+    \caption{LSTM混淆矩阵}
+    \label{fig:lstm_confusion}
+\end{figure}
+
+\subsubsection{GRU性能分析}
+\begin{figure}[htbp]
+\centering
+\subfigure[GRU训练损失]{
+\begin{minipage}[t]{0.45\linewidth}
+\centering
+\includegraphics[width=\textwidth]{loss_gru.png}
+\end{minipage}%
+}%
+\subfigure[GRU训练准确率]{
+\begin{minipage}[t]{0.45\linewidth}
+\centering
+\includegraphics[width=\textwidth]{accuracy_gru.png}
+\end{minipage}%
+}%
+\caption{GRU训练过程}
+\label{fig:gru_training}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{confusion_matrix_gru.png}
+    \caption{GRU混淆矩阵}
+    \label{fig:gru_confusion}
+\end{figure}
+
+\section{性能对比分析}
+\subsection{为什么LSTM性能优于RNN}
+
+LSTM相比传统RNN具有显著优势，主要体现在以下几个方面：
+
+\subsubsection{梯度消失问题的解决}
+\textbf{RNN的问题：}
+\begin{itemize}
+    \item 在反向传播过程中，梯度会随着时间步的增加而指数衰减
+    \item 导致网络难以学习长期依赖关系
+    \item 训练过程不稳定，容易陷入局部最优
+\end{itemize}
+
+\textbf{LSTM的解决方案：}
+\begin{itemize}
+    \item 通过门控机制控制信息流动
+    \item 细胞状态提供了梯度的"高速公路"
+    \item 遗忘门可以选择性地保留或丢弃信息
+\end{itemize}
+
+\subsubsection{记忆能力的提升}
+\textbf{RNN的局限：}
+\begin{itemize}
+    \item 隐藏状态容量有限
+    \item 新信息会覆盖旧信息
+    \item 难以维持长期记忆
+\end{itemize}
+
+\textbf{LSTM的优势：}
+\begin{itemize}
+    \item 细胞状态可以长期保存重要信息
+    \item 输入门控制新信息的写入
+    \item 输出门控制信息的读取
+\end{itemize}
+
+\subsubsection{训练稳定性}
+从实验结果可以看出：
+\begin{itemize}
+    \item LSTM训练曲线更加平滑
+    \item 收敛速度更快
+    \item 最终性能更优
+\end{itemize}
+
+\subsection{GRU与LSTM的对比}
+\textbf{GRU的优势：}
+\begin{itemize}
+    \item 参数数量较少，训练速度更快
+    \item 结构相对简单，易于实现
+    \item 在某些任务上性能接近LSTM
+\end{itemize}
+
+\textbf{LSTM的优势：}
+\begin{itemize}
+    \item 更强的表达能力
+    \item 更好的长期依赖建模能力
+    \item 在复杂任务上通常表现更好
+\end{itemize}
+
+\section{实验结论}
+\subsection{主要发现}
+\begin{enumerate}
+    \item \textbf{性能排序}：LSTM > GRU > RNN
+    \item \textbf{收敛速度}：LSTM最快，RNN最慢
+    \item \textbf{训练稳定性}：LSTM最稳定，RNN波动较大
+    \item \textbf{计算复杂度}：RNN最低，LSTM最高
+\end{enumerate}
+
+\subsection{适用场景分析}
+\begin{itemize}
+    \item \textbf{RNN}：适用于简单的序列任务，计算资源有限的场景
+    \item \textbf{LSTM}：适用于需要长期依赖的复杂序列任务
+    \item \textbf{GRU}：在性能和效率之间的平衡选择
+\end{itemize}
+
+\subsection{实验心得}
+\begin{itemize}
+    \item 门控机制是解决梯度消失问题的有效方法
+    \item 网络结构的选择需要根据具体任务和资源约束来决定
+    \item 适当的正则化（如Dropout）有助于提升模型泛化能力
+    \item 超参数调优对模型性能有重要影响
+\end{itemize}
+
+\newpage
+\appendix
+\section{网络代码实现}
+\label{appendix:code}
+
+\subsection{RNN网络实现}
+\begin{lstlisting}[language=Python, caption=RNN网络完整实现]
+class RNN(BaseModel):
+    def __init__(self, input_size, hidden_size, output_size):
+        super(RNN, self).__init__(input_size, hidden_size, output_size)
+        
+        self.i2h = nn.Linear(input_size + hidden_size, hidden_size)
+        self.i2o = nn.Linear(input_size + hidden_size, output_size)
+        self.softmax = nn.LogSoftmax(dim=1)
+
+    def forward(self, input, hidden):
+        combined = torch.cat((input, hidden), 1)
+        hidden = self.i2h(combined)
+        output = self.i2o(combined)
+        output = self.softmax(output)
+        return output, hidden
+
+    def initHidden(self):
+        return torch.zeros(1, self.hidden_size)
+\end{lstlisting}
+
+\subsection{LSTM网络实现}
+\begin{lstlisting}[language=Python, caption=LSTM网络完整实现]
+class LSTM(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size, dropout_rate=0.2):
+        super(LSTM, self).__init__()
+        
+        self.hidden_size = hidden_size
+        
+        # 输入门组件
+        self.input_gate = nn.Linear(input_size + hidden_size, hidden_size)
+        # 遗忘门组件
+        self.forget_gate = nn.Linear(input_size + hidden_size, hidden_size)
+        # 输出门组件
+        self.output_gate = nn.Linear(input_size + hidden_size, hidden_size)
+        # 单元状态组件
+        self.cell_gate = nn.Linear(input_size + hidden_size, hidden_size)
+        
+        # 添加dropout
+        self.dropout = nn.Dropout(dropout_rate)
+        
+        # 输出层
+        self.output_layer = nn.Linear(hidden_size, output_size)
+        self.softmax = nn.LogSoftmax(dim=1)
+        
+    def forward(self, input, hidden, cell):
+        combined = torch.cat((input, hidden), 1)
+        
+        # 计算各个门的值
+        forget_gate_value = torch.sigmoid(self.forget_gate(combined))
+        input_gate_value = torch.sigmoid(self.input_gate(combined))
+        output_gate_value = torch.sigmoid(self.output_gate(combined))
+        cell_gate_value = torch.tanh(self.cell_gate(combined))
+        
+        # 更新细胞状态
+        cell = forget_gate_value * cell + input_gate_value * cell_gate_value
+        
+        # 计算隐藏状态
+        hidden = output_gate_value * torch.tanh(cell)
+        
+        # 应用dropout
+        hidden = self.dropout(hidden)
+        
+        # 计算输出
+        output = self.output_layer(hidden)
+        output = self.softmax(output)
+        
+        return output, hidden, cell
+        
+    def initHidden(self):
+        return torch.zeros(1, self.hidden_size), torch.zeros(1, self.hidden_size)
+\end{lstlisting}
+
+\subsection{GRU网络实现}
+\begin{lstlisting}[language=Python, caption=GRU网络完整实现]
+class GRU(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super(GRU, self).__init__()
+        
+        self.hidden_size = hidden_size
+        
+        # 重置门组件
+        self.reset_gate = nn.Linear(input_size + hidden_size, hidden_size)
+        # 更新门组件
+        self.update_gate = nn.Linear(input_size + hidden_size, hidden_size)
+        # 候选隐藏状态组件
+        self.h_tilde = nn.Linear(input_size + hidden_size, hidden_size)
+        
+        # 输出层
+        self.output_layer = nn.Linear(hidden_size, output_size)
+        self.softmax = nn.LogSoftmax(dim=1)
+        
+    def forward(self, input, hidden):
+        combined = torch.cat((input, hidden), 1)
+        
+        # 计算重置门和更新门
+        reset_gate_value = torch.sigmoid(self.reset_gate(combined))
+        update_gate_value = torch.sigmoid(self.update_gate(combined))
+        
+        # 计算候选隐藏状态
+        reset_hidden = reset_gate_value * hidden
+        combined_reset = torch.cat((input, reset_hidden), 1)
+        h_tilde_value = torch.tanh(self.h_tilde(combined_reset))
+        
+        # 更新隐藏状态
+        hidden = (1 - update_gate_value) * hidden + update_gate_value * h_tilde_value
+        
+        # 计算输出
+        output = self.output_layer(hidden)
+        output = self.softmax(output)
+        
+        return output, hidden
+        
+    def initHidden(self):
+        return torch.zeros(1, self.hidden_size)
+\end{lstlisting}
 
 \newpage
 \bibliographystyle{plain}
